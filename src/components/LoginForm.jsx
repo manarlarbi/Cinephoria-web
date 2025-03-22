@@ -30,12 +30,12 @@ const LoginForm = () => {
           mot_de_passe: motDePasse, 
         }),
       });
-
-      const data = await res.json();
       if (!res.ok) {
         Swal.fire("Erreur", "Une erreur est survenue", "error");
         return;
       }
+      const data = await res.json();
+      
 
       Cookies.set("token", data.token, { secure: true });
       Cookies.set("userRole", data.role);
