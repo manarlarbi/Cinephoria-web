@@ -27,7 +27,7 @@ function MoviesDetailles() {
         }
         fetchData();
     }, [id_film]);
-    if (!film) {return <Typography>Loading ....</Typography>;}
+    if (!film) {return <Typography>Actualiser la page</Typography>;}
     async function handelAddReview() {
         console.log("id_utilisateur cookie =", Cookies.get("id_utilisateur"));
 
@@ -90,7 +90,7 @@ function MoviesDetailles() {
                             readOnly
                             precision={0.5}
                         />
-                        <Typography variant="body1">{r.comment}</Typography>
+                        <Typography >{r.comment}</Typography>
                     </Box>
                 ))}
 
