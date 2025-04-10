@@ -24,6 +24,7 @@ const ReservationPage = () => {
   const [nombrePlaces, setNombrePlaces] = useState(1);
   const [seatSelection, setSeatSelection] = useState("");
   const [price, setPrice] = useState(0);
+  const token = Cookies.get("token");
 
   useEffect(() => {
     fetch("http://213.156.132.144:3033/films")
@@ -104,7 +105,10 @@ const ReservationPage = () => {
     try {
       const res = await fetch("http://213.156.132.144:3033/reservations", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(payload),
       });
       const data = await res.json();

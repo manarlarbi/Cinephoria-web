@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@mui/material";
+import Cookies from "js-cookie";
 
 export default function FilmsPage() {
   const [films, setFilms] = useState([]);
@@ -10,6 +11,7 @@ export default function FilmsPage() {
   const [ageMinimum, setAgeMinimum] = useState("");
   const [afficheUrl, setAfficheUrl] = useState("");
   const [note, setNote] = useState("");
+  const token = Cookies.get("token");
 
   useEffect(() => {
     fetch("http://213.156.132.144:3033/films")
@@ -22,7 +24,10 @@ export default function FilmsPage() {
     e.preventDefault();
     fetch("http://213.156.132.144:3033/films/creer", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         titre,
         description,
@@ -30,17 +35,21 @@ export default function FilmsPage() {
         genre,
         age_minimum: Number(ageMinimum),
         affiche_url: afficheUrl,
-        note: Number(note) || 0, 
+        note: Number(note) || 0,
       }),
     })
-      .then(() => window.location.reload()) 
+      .then(() => window.location.reload())
       .catch((err) => console.log("Erreur ajout film:", err));
   };
 
-  
   const handleDeleteFilm = (id) => {
-    fetch(`http://213.156.132.144:3033/films/${id}`, { method: "DELETE" })
-      .then(() => window.location.reload()) 
+    fetch(`http://213.156.132.144:3033/films/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(() => window.location.reload())
       .catch((err) => console.log("Erreur suppression film:", err));
   };
 
@@ -48,7 +57,6 @@ export default function FilmsPage() {
     <Container>
       <Typography variant="h4">Gestion des Films</Typography>
 
-      
       <form onSubmit={handleAddFilm}>
         <TextField label="Titre" value={titre} onChange={(e) => setTitre(e.target.value)} required />
         <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
@@ -60,7 +68,6 @@ export default function FilmsPage() {
         <Button type="submit">Créer Film</Button>
       </form>
 
-      
       <Table component={Paper} sx={{ mt: 3 }}>
         <TableHead>
           <TableRow>

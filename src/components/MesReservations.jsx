@@ -15,13 +15,20 @@ const MesReservations = () => {
   const [reservations, setReservations] = useState([]);
     const navigate = useNavigate();
   const idUtilisateur = Cookies.get("id_utilisateur");
+  const token = Cookies.get("token");
 
   useEffect(() => {
  
     const fetchReservations = async () => {
       try {
         const res = await fetch(
-          `http://213.156.132.144:3033/mes-reservations/${idUtilisateur}`
+          `http://213.156.132.144:3033/mes-reservations/${idUtilisateur}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!res.ok)
           throw new Error("Erreur lors du chargement des réservations.");
@@ -33,7 +40,7 @@ const MesReservations = () => {
     };
 
     fetchReservations();
-  }, [idUtilisateur]);
+  }, [idUtilisateur,token]);
 
   const annulerReservation = async (id_reservation) => {
     try {
@@ -41,6 +48,9 @@ const MesReservations = () => {
         `http://213.156.132.144:3033/reservations/${id_reservation}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
         }
       );
       if (!res.ok)
