@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Chip, Link } from "@mui/material";
+import { Box, Typography, Button, Chip} from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 import ChairIcon from "@mui/icons-material/Chair";
-import Cookies from "js-cookie";
 
 
 const genres = [
@@ -30,7 +29,8 @@ function MoviesPage() {
   const [sessions, setSessions] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [avis, setAvis] = useState([]);
+  const [moyennes, setMoyennes] = useState({});
+
   const navigate = useNavigate();
 
 
@@ -48,6 +48,15 @@ function MoviesPage() {
           throw new Error("Erreur HTTP séances: " + seancesRes.status);
         }
         const seancesData = await seancesRes.json();
+        const moyennesTable = {};
+        for (let i = 0; i < filmsData.length; i++) {
+          const filmId = filmsData[i].id_film;
+          const moyenne = await getMoyenneAvis(filmId);
+          if (moyenne) {
+            moyennesTable[filmId] = moyenne;
+          }
+          setMoyennes(moyennesTable);
+        }
 
         setMovies(filmsData);
         setSessions(seancesData);
@@ -110,7 +119,19 @@ function MoviesPage() {
       }
     }
   }
+  async function getMoyenneAvis(filmId) {
+    const res = await fetch(`http://localhost:3033/avis/getReviews/${filmId}`);
+    const avis = await res.json();
+    if (avis.length === 0) {
+      return;
 
+    }
+    let somme = 0;
+    for (let i = 0; i < avis.length; i++) {
+      somme += avis[i].rating;
+    }
+    return (somme / avis.length);
+  }
   return (
     <Box
       sx={{
@@ -187,7 +208,15 @@ function MoviesPage() {
                 label={"Âge: " + selectedMovie.age_minimum + "+"}
                 color={selectedMovie.age_minimum >= 18 ? "error" : "success"}
               />
-              <Chip label={"⭐ " + selectedMovie.note} color="secondary" />
+              <Chip
+                label={
+                  moyennes[selectedMovie.id_film] !== undefined
+                    ? `⭐ ${moyennes[selectedMovie.id_film].toFixed(1)}`
+                    : "⭐ Pas encore noté"
+                }
+                color="secondary"
+              />
+
               <Chip label={selectedMovie.genre} color="default" />
             </Box>
             <Typography variant="body1" sx={{ opacity: 0.7, mt: 2, maxWidth: 500 }}>
@@ -235,8 +264,8 @@ function MoviesPage() {
 
             <Box
               sx={{
-                display: "flex", 
-                gap: 2, 
+                display: "flex",
+                gap: 2,
                 mt: 3,
               }}
             >
