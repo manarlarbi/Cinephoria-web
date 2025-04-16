@@ -52,12 +52,20 @@ function Navbar() {
 
   const navItems = [
     { text: "Accueil", path: "/", icon: <HomeIcon /> },
-    ...(userRole !== "Administrateur"
-      ? [{ text: "Réservation", path: "/reservation", icon: <EventSeatIcon /> }]
-      : []),
-    { text: "Films", path: "/", icon: <MovieIcon /> },
-    { text: "Contact", path: "/contact", icon: <ContactMailIcon /> },
   ];
+  
+  if (userRole !== "Administrateur"&& userRole !=="Employé") {
+    navItems.push({ text: "Réservation", path: "/reservation", icon: <EventSeatIcon /> });
+  }
+  if (userRole==="Employé"){
+    navItems.push({ text: "Gérer les avis", path: "/avis", icon: <MovieIcon /> });
+  }
+  
+  navItems.push(
+    { text: "Films", path: "/", icon: <MovieIcon /> },
+    { text: "Contact", path: "/contact", icon: <ContactMailIcon /> }
+  );
+  
 
   return (
     <>
