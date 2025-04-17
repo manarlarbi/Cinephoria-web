@@ -22,8 +22,15 @@ function MoviesDetailles() {
                 throw new Error("Erreur lors de la récupération des avis");
               }
             const ReviewData = await ReviewRes.json();
+            let avisValides=[];
+            for(let i=0;i<ReviewData.length;i++){
+                if(ReviewData[i].isValider===true){
+                    avisValides.push(ReviewData[i]);
+                }
+                    
+            }
             setFilm(MoviesData);
-            setAvis(ReviewData);
+            setAvis(avisValides);
         }
         fetchData();
     }, [id_film]);
@@ -51,7 +58,9 @@ function MoviesDetailles() {
             setRating(0);
             setCommentaire("");
             const updatedAvis = await fetch(`http://localhost:3033/avis/getReviews/${id_film}`);
-            setAvis(await updatedAvis.json());
+            const updatedData = await updatedAvis.json();
+            const avisValides =updatedData.filter((a)=>a.isValider===true);
+            setAvis(avisValides);
         } }
 
         return (
