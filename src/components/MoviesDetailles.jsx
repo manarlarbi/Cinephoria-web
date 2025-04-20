@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+
 
 import { useParams } from "react-router-dom";
 function MoviesDetailles() {
@@ -10,6 +12,11 @@ function MoviesDetailles() {
     const [avis, setAvis] = useState([]);
     const [rating, setRating] = useState(0);
     const [commentaire, setCommentaire] = useState("");
+    const token = Cookies.get("token");
+    const role=Cookies.get("userRole");
+    if(!token){
+        console.log("token non trouvé");
+    }
     useEffect(() => {
         async function fetchData() {
             const MoviesRes = await fetch(`http://localhost:3033/films/${id_film}`);
@@ -37,11 +44,28 @@ function MoviesDetailles() {
     if (!film) {return <Typography>Actualiser la page</Typography>;}
     async function handelAddReview() {
         console.log("id_utilisateur cookie =", Cookies.get("id_utilisateur"));
+        if (!token) {
+            Swal.fire({
+              icon: "warning",
+              title: "Connexion requise",
+              text: "Vous devez être connecté pour ajouter un avis.",
+            });
+            return; 
+          }
+          if (role !== "Utilisateur") {
+            Swal.fire({
+                icon: "warning",
+                title: "Accès refusé", 
+                text: "Vous devez être un utilisateur pour ajouter un avis.",
+              });
+            return;
+          }
 
         const response = await fetch(`http://localhost:3033/avis/addReview`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
+                , Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
                 filmId: parseInt(id_film,10),
