@@ -18,6 +18,8 @@ import MesReservations from "./components/MesReservations";
 import FilmsPage from "./components/Admin/FilmsPage";
 import SeancesPage from "./components/Admin/SeancePage";
 import SallesPage from "./components/Admin/SallesPage";
+import MoviesDetailles from "./components/MoviesDetailles";
+import GererLesAvis from "./components/Employe/GererLesAvis";
 
 const darkTheme = createTheme({
   palette: {
@@ -66,6 +68,8 @@ function App() {
             <Route path="/admin/films" element={<FilmsPage />} />
             <Route path="/admin/seances" element={<SeancesPage />} />
             <Route path="/admin/salles" element={<SallesPage />} />
+            <Route path="/films/:id_film" element={<MoviesDetailles/>} />
+            <Route path="/avis" element={<GererLesAvis />} />
           </Routes>
           <Footer />
         </BrowserRouter>

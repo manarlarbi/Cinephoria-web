@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, Chip, Link } from "@mui/material";
+import { Box, Typography, Button, Chip} from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 import ChairIcon from "@mui/icons-material/Chair";
+
 
 const genres = [
   "Action",
@@ -28,37 +29,48 @@ function MoviesPage() {
   const [sessions, setSessions] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [moyennes, setMoyennes] = useState({});
+
   const navigate = useNavigate();
+
 
   useEffect(function () {
     async function fetchData() {
       try {
-        const filmsRes = await fetch("http://213.156.132.144:3033/films");
+        const filmsRes = await fetch("http://localhost:3033/films");
         if (!filmsRes.ok) {
           throw new Error("Erreur HTTP films: " + filmsRes.status);
         }
         const filmsData = await filmsRes.json();
 
-        const seancesRes = await fetch("http://213.156.132.144:3033/full-seances");
+        const seancesRes = await fetch("http://localhost:3033/seances/");
         if (!seancesRes.ok) {
           throw new Error("Erreur HTTP séances: " + seancesRes.status);
         }
         const seancesData = await seancesRes.json();
+        const moyennesTable = {};
+        for (let i = 0; i < filmsData.length; i++) {
+          const filmId = filmsData[i].id_film;
+          const moyenne = await getMoyenneAvis(filmId);
+          if (moyenne) {
+            moyennesTable[filmId] = moyenne;
+          }
+          setMoyennes(moyennesTable);
+        }
 
         setMovies(filmsData);
         setSessions(seancesData);
 
         var movieWithSession = null;
-        for (var i = 0; i < filmsData.length; i++) {
+        let i = 0;
+        while (movieWithSession === null && i <= filmsData.length) {
           for (var j = 0; j < seancesData.length; j++) {
             if (seancesData[j].id_film === filmsData[i].id_film) {
               movieWithSession = filmsData[i];
-              break;
             }
           }
-          if (movieWithSession) {
-            break;
-          }
+          i++;
+
         }
         setSelectedMovie(movieWithSession);
         setLoading(false);
@@ -87,7 +99,7 @@ function MoviesPage() {
     );
   }
 
-  
+
 
   var moviesWithSession = [];
   for (var i = 0; i < movies.length; i++) {
@@ -107,7 +119,19 @@ function MoviesPage() {
       }
     }
   }
+  async function getMoyenneAvis(filmId) {
+    const res = await fetch(`http://localhost:3033/avis/getReviews/${filmId}`);
+    const avis = await res.json();
+    if (avis.length === 0) {
+      return;
 
+    }
+    let somme = 0;
+    for (let i = 0; i < avis.length; i++) {
+      somme += avis[i].rating;
+    }
+    return (somme / avis.length);
+  }
   return (
     <Box
       sx={{
@@ -132,7 +156,7 @@ function MoviesPage() {
             overflow: "hidden",
           }}
         >
-          
+
           <Box
             sx={{
               position: "absolute",
@@ -148,7 +172,7 @@ function MoviesPage() {
             }}
           />
 
-          
+
           <Box
             component="img"
             src={selectedMovie.affiche_url}
@@ -165,7 +189,7 @@ function MoviesPage() {
             }}
           />
 
-          
+
           <Box
             sx={{
               position: "relative",
@@ -184,14 +208,22 @@ function MoviesPage() {
                 label={"Âge: " + selectedMovie.age_minimum + "+"}
                 color={selectedMovie.age_minimum >= 18 ? "error" : "success"}
               />
-              <Chip label={"⭐ " + selectedMovie.note} color="secondary" />
+              <Chip
+                label={
+                  moyennes[selectedMovie.id_film] !== undefined
+                    ? `⭐ ${moyennes[selectedMovie.id_film].toFixed(1)}`
+                    : "⭐ Pas encore noté"
+                }
+                color="secondary"
+              />
+
               <Chip label={selectedMovie.genre} color="default" />
             </Box>
             <Typography variant="body1" sx={{ opacity: 0.7, mt: 2, maxWidth: 500 }}>
               {selectedMovie.description}
             </Typography>
 
-            
+
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6">Séances disponibles:</Typography>
               {availableSessions.length > 0 ? (
@@ -210,9 +242,9 @@ function MoviesPage() {
                         onClick={function () {
                           navigate(
                             "/reservation?movie=" +
-                              selectedMovie.id_film +
-                              "&session=" +
-                              session.id_seance,
+                            selectedMovie.id_film +
+                            "&session=" +
+                            session.id_seance,
                             {
                               state: { movie: selectedMovie, session: session },
                             }
@@ -230,27 +262,47 @@ function MoviesPage() {
               )}
             </Box>
 
-            <Button
-              variant="contained"
+            <Box
               sx={{
-                backgroundColor: "violet",
-                color: "aliceblue",
-                fontWeight: "bold",
+                display: "flex",
+                gap: 2,
                 mt: 3,
               }}
-              onClick={function () {
-                navigate("/reservation?movie=" + selectedMovie.id_film, {
-                  state: { movie: selectedMovie },
-                });
-              }}
             >
-              <ChairIcon /> &nbsp; Réserver vos places
-            </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "violet",
+                  color: "aliceblue",
+                  fontWeight: "bold",
+                }}
+                onClick={function () {
+                  navigate("/reservation?movie=" + selectedMovie.id_film, {
+                    state: { movie: selectedMovie },
+                  });
+                }}
+              >
+                <ChairIcon /> &nbsp; Réserver vos places
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  backgroundColor: "violet",
+                  color: "aliceblue",
+                  fontWeight: "bold",
+                  borderRadius: "5px",
+                }}
+                onClick={() =>
+                  navigate(`/films/${selectedMovie.id_film}`)}
+              >
+                Ajouter un avis
+              </Button>
+            </Box>
           </Box>
         </Box>
       )}
 
-      
+
       {genres.map(function (genre) {
         return (
           <Box key={genre} sx={{ mt: 5 }}>

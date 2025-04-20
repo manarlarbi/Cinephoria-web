@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@mui/material";
+import Cookies from "js-cookie";
 
 function SeancesPage() {
   const [seances, setSeances] = useState([]);
@@ -10,8 +11,8 @@ function SeancesPage() {
   const [idSalle, setIdSalle] = useState("");
   const [heureDebut, setHeureDebut] = useState("");
   const [heureFin, setHeureFin] = useState("");
+  const token = Cookies.get("token");
 
-  
   useEffect(function () {
     function fetchSeances() {
       fetch("http://213.156.132.144:3033/seances")
@@ -28,7 +29,6 @@ function SeancesPage() {
     fetchSeances();
   }, []);
 
-  
   useEffect(function () {
     function fetchFilms() {
       fetch("http://213.156.132.144:3033/films")
@@ -45,7 +45,6 @@ function SeancesPage() {
     fetchFilms();
   }, []);
 
-  
   useEffect(function () {
     function fetchSalles() {
       fetch("http://213.156.132.144:3033/salles")
@@ -62,12 +61,14 @@ function SeancesPage() {
     fetchSalles();
   }, []);
 
-  
   function handleAddSeance(e) {
     e.preventDefault();
     fetch("http://213.156.132.144:3033/seances/creer", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         id_film: Number(idFilm),
         id_salle: Number(idSalle),
@@ -76,16 +77,20 @@ function SeancesPage() {
       }),
     })
       .then(function () {
-        window.location.reload(); 
+        window.location.reload();
       })
       .catch(function (err) {
         console.log("Erreur ajout séance:", err);
       });
   }
 
-  
   function handleDeleteSeance(id) {
-    fetch("http://213.156.132.144:3033/seances/" + id, { method: "DELETE" })
+    fetch("http://213.156.132.144:3033/seances/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(function () {
         window.location.reload();
       })
@@ -98,7 +103,6 @@ function SeancesPage() {
     <Container>
       <Typography variant="h4">Gestion des Séances</Typography>
 
-      
       <form onSubmit={handleAddSeance}>
         <TextField label="ID Film" select SelectProps={{ native: true }} value={idFilm} onChange={function (e) { setIdFilm(e.target.value); }} required>
           <option value="">Sélectionner un film</option>
@@ -119,7 +123,6 @@ function SeancesPage() {
         <Button type="submit">Créer Séance</Button>
       </form>
 
-      
       <Table component={Paper} sx={{ mt: 3 }}>
         <TableHead>
           <TableRow>

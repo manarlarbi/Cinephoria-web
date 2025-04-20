@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Box, Container, Typography, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie"; 
+
+
+
 
 const ContactForm = () => {
   const [nomUtilisateur, setNomUtilisateur] = useState(""); 
   const [sujet, setSujet] = useState("");
   const [message, setMessage] = useState("");
+  const token = Cookies.get("token");
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -22,7 +28,10 @@ const ContactForm = () => {
     try {
       const response = await fetch("http://213.156.132.144:3033/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+           "Authorization": `Bearer ${token}`,
+           "Content-Type": "application/json", 
+          },
         body: JSON.stringify({
           nom_utilisateur: nomUtilisateur,
           sujet: sujet, 

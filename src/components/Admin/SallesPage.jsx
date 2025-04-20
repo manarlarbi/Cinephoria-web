@@ -11,6 +11,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import Cookies from "js-cookie";
 
 export default function SallesPage() {
   const [salles, setSalles] = useState([]);
@@ -20,8 +21,8 @@ export default function SallesPage() {
   const [horaires, setHoraires] = useState("");
   const [nombrePlaces, setNombrePlaces] = useState("");
   const [qualite, setQualite] = useState("");
+  const token = Cookies.get("token");
 
-  
   useEffect(() => {
     fetch("http://213.156.132.144:3033/salles")
       .then((res) => res.json())
@@ -29,12 +30,14 @@ export default function SallesPage() {
       .catch((err) => console.log("Erreur fetch salles:", err));
   }, []);
 
-  
   const handleAddSalle = (e) => {
     e.preventDefault();
     fetch("http://213.156.132.144:3033/salles/creer", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
         nom_cinema: nom,
         adresse,
@@ -44,12 +47,17 @@ export default function SallesPage() {
         qualite,
       }),
     })
-      .then(() => window.location.reload()) 
+      .then(() => window.location.reload())
       .catch((err) => console.log("Erreur ajout salle:", err));
   };
 
   const handleDeleteSalle = (id) => {
-    fetch(`http://213.156.132.144:3033/salles/${id}`, { method: "DELETE" })
+    fetch(`http://213.156.132.144:3033/salles/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(() => window.location.reload())
       .catch((err) => console.log("Erreur suppression salle:", err));
   };
@@ -58,7 +66,6 @@ export default function SallesPage() {
     <Container>
       <Typography variant="h4">Gestion des Salles</Typography>
 
-      
       <form onSubmit={handleAddSalle}>
         <TextField
           label="Nom du Cinéma"
@@ -100,7 +107,6 @@ export default function SallesPage() {
         <Button type="submit">Créer Salle</Button>
       </form>
 
-      
       <Table component={Paper} sx={{ mt: 3 }}>
         <TableHead>
           <TableRow>
