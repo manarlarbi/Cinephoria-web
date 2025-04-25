@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Container, Typography, TextField, Button } from "@mui/material";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie"; 
+import { URL_BACKEND } from "../utils/constants"; 
 
 
 
@@ -26,7 +27,7 @@ const ContactForm = () => {
     }
 
     try {
-      const response = await fetch("http://213.156.132.144:3033/contact", {
+      const response = await fetch( `${URL_BACKEND}/contact`, {
         method: "POST",
         headers: {
            "Authorization": `Bearer ${token}`,

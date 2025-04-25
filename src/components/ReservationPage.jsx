@@ -12,6 +12,7 @@ import {
 import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import { URL_BACKEND } from "../utils/constants";
 
 const ReservationPage = () => {
   const location = useLocation();
@@ -26,22 +27,25 @@ const ReservationPage = () => {
   const [price, setPrice] = useState(0);
   const token = Cookies.get("token");
 
+  const params = new URLSearchParams(location.search);
+  const movieParam = +params.get("movie");
+  const sessionParam = +params.get("session");
+
   useEffect(() => {
-    fetch("http://213.156.132.144:3033/films")
+    fetch(`${URL_BACKEND}/films`)
       .then((res) => res.json())
       .then((data) => {
         setMovies(data);
-        const params = new URLSearchParams(location.search);
-        const movieId = params.get("movie");
-        if (movieId) setSelectedMovie(data.find((m) => m.id_film === +movieId));
+        const foundMovie = data.find((m) => m.id_film === movieParam);
+        if (foundMovie) setSelectedMovie(foundMovie);
       })
       .catch(() =>
         Swal.fire("Erreur", "Erreur de chargement des films", "error")
       );
-  }, [location.search]);
+  }, [movieParam]);
 
   useEffect(() => {
-    fetch("http://213.156.132.144:3033/cinemas")
+    fetch(`${URL_BACKEND}/salles/cinemas`)
       .then((res) => res.json())
       .then(setCinemas)
       .catch(() =>
@@ -50,12 +54,15 @@ const ReservationPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedMovie && selectedCinema && nombrePlaces) {
+    if (selectedMovie && selectedCinema !== "" && nombrePlaces) {
       fetch(
-        `http://213.156.132.144:3033/available-sessions?id_film=${selectedMovie.id_film}&nom_cinema=${selectedCinema}&min_seats=${nombrePlaces}`
+        `${URL_BACKEND}/seances/available-sessions?id_film=${selectedMovie.id_film}&nom_cinema=${selectedCinema}&min_seats=${nombrePlaces}`
       )
         .then((res) => res.json())
-        .then(setSessions)
+        .then((data) => {
+          if (Array.isArray(data)) setSessions(data);
+          else setSessions([]); 
+        })
         .catch(() =>
           Swal.fire("Erreur", "Erreur de chargement des séances", "error")
         );
@@ -63,6 +70,7 @@ const ReservationPage = () => {
       setSessions([]);
     }
   }, [selectedMovie, selectedCinema, nombrePlaces]);
+  
 
   useEffect(() => {
     const session = sessions.find((s) => s.id_seance === +selectedSessionId);
@@ -103,7 +111,7 @@ const ReservationPage = () => {
     };
 
     try {
-      const res = await fetch("http://213.156.132.144:3033/reservations", {
+      const res = await fetch(`${URL_BACKEND}/reservations/creerReservation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

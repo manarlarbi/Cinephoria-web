@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import { URL_BACKEND } from "../../utils/constants";
 export default function CreerLesEmploye(){
     const [employes, setEmployes] = useState([]);
     const [nom, setNom] = useState("");
@@ -12,15 +13,16 @@ export default function CreerLesEmploye(){
     const [nom_utilisateur, setNomUtilisateur] = useState("");
     const [date_naissance, setDateDeNaissance] = useState("");
     const token = Cookies.get("token");
+    
     useEffect(()=>{
-        fetch("http://localhost:3033/employes/")
+        fetch(`${URL_BACKEND}/employes/`)
         .then ((res)=>res.json())
         .then((data)=>setEmployes(data))
         .catch((err)=>console.log("Erreur fetch employes:",err));
     },[]);
     const handelAddEmploye=(e)=>{
         e.preventDefault();
-        fetch("http://localhost:3033/employes/creerEmploye",{
+        fetch(`${URL_BACKEND}/employes/creerEmploye`,{
             method:"POST",
             headers:{
                 "content-Type":"application/json",
@@ -41,7 +43,7 @@ export default function CreerLesEmploye(){
         .catch((err)=>console.log("Erreur ajout employe:",err));
     }
     const handelDeleteEmploye=(id)=>{
-        fetch(`http://localhost:3033/employes/${id}`,{
+        fetch(`${URL_BACKEND}/employes/${id}`,{
             method:"DELETE",
             headers:{
                 Authorization: `Bearer ${token}`,

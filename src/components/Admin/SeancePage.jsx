@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@mui/material";
 import Cookies from "js-cookie";
+import { URL_BACKEND } from "../../utils/constants";
 
 function SeancesPage() {
   const [seances, setSeances] = useState([]);
@@ -15,7 +16,7 @@ function SeancesPage() {
 
   useEffect(function () {
     function fetchSeances() {
-      fetch("http://213.156.132.144:3033/seances")
+      fetch(`${URL_BACKEND}/seances`)
         .then(function (res) {
           return res.json();
         })
@@ -31,7 +32,7 @@ function SeancesPage() {
 
   useEffect(function () {
     function fetchFilms() {
-      fetch("http://213.156.132.144:3033/films")
+      fetch(`${URL_BACKEND}/films`)
         .then(function (res) {
           return res.json();
         })
@@ -47,7 +48,7 @@ function SeancesPage() {
 
   useEffect(function () {
     function fetchSalles() {
-      fetch("http://213.156.132.144:3033/salles")
+      fetch(`${URL_BACKEND}/salles`)
         .then(function (res) {
           return res.json();
         })
@@ -63,7 +64,7 @@ function SeancesPage() {
 
   function handleAddSeance(e) {
     e.preventDefault();
-    fetch("http://213.156.132.144:3033/seances/creer", {
+    fetch(`${URL_BACKEND}/seances/creer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +86,7 @@ function SeancesPage() {
   }
 
   function handleDeleteSeance(id) {
-    fetch("http://213.156.132.144:3033/seances/" + id, {
+    fetch(`${URL_BACKEND}/seances/` + id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
