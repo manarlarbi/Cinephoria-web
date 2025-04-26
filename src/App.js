@@ -21,6 +21,7 @@ import SallesPage from "./components/Admin/SallesPage";
 import MoviesDetailles from "./components/MoviesDetailles";
 import GererLesAvis from "./components/Employe/GererLesAvis";
 
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
