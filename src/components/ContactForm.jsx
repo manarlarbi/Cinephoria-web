@@ -27,7 +27,7 @@ const ContactForm = () => {
     }
 
     try {
-      const response = await fetch( `${URL_BACKEND}/contact`, {
+      const response = await fetch( `${URL_BACKEND}/contact/`, {
         method: "POST",
         headers: {
            "Authorization": `Bearer ${token}`,
