@@ -18,3 +18,4 @@ export function isValidPassword(mot_de_passe){
         /[!@#$%^&*(),.?":{}|<>]/.test(mot_de_passe)
     );
 }
+
