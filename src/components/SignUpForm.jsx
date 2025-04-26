@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { AuthContext } from "../App";
 import Swal from "sweetalert2";
+import { isValidEmail,isValidPassword } from "../utils/validation";
+import { URL_BACKEND } from "../utils/constants";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ const SignUpForm = () => {
     mot_de_passe: "",
   });
 
-  const isValidEmail = (email) => {
+ /* const isValidEmail = (email) => {
     return (
       email.includes("@") &&
       email.includes(".") &&
@@ -38,13 +40,13 @@ const SignUpForm = () => {
     Mot de passe : 8 caractères minimum avec au moins une majuscule, une
     minuscule, un chiffre et un caractère spécial.
     */
-    if (mot_de_passe.length < 8) return false;
+   /* if (mot_de_passe.length < 8) return false;
     if (!/[A-Z]/.test(mot_de_passe)) return false;
     if (!/[a-z]/.test(mot_de_passe)) return false;
     if (!/[0-9]/.test(mot_de_passe)) return false;
     return true;
   };
-
+*/
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -85,7 +87,7 @@ const SignUpForm = () => {
 
 
     try {
-      const response = await fetch("http://213.156.132.144:3033/inscription", {
+      const response = await fetch(`${URL_BACKEND}/inscription`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

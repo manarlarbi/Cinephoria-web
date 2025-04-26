@@ -12,6 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import Cookies from "js-cookie";
+import { URL_BACKEND } from "../../utils/constants";
 
 export default function SallesPage() {
   const [salles, setSalles] = useState([]);
@@ -24,7 +25,7 @@ export default function SallesPage() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    fetch("http://213.156.132.144:3033/salles")
+    fetch(`${URL_BACKEND}/salles`)
       .then((res) => res.json())
       .then((data) => setSalles(data))
       .catch((err) => console.log("Erreur fetch salles:", err));
@@ -32,7 +33,7 @@ export default function SallesPage() {
 
   const handleAddSalle = (e) => {
     e.preventDefault();
-    fetch("http://213.156.132.144:3033/salles/creer", {
+    fetch(`${URL_BACKEND}/salles/creer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +53,7 @@ export default function SallesPage() {
   };
 
   const handleDeleteSalle = (id) => {
-    fetch(`http://213.156.132.144:3033/salles/${id}`, {
+    fetch(`${URL_BACKEND}/salles/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

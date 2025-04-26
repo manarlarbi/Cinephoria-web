@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { AuthContext } from "../App";
 import Swal from "sweetalert2";
-
+import { URL_BACKEND } from "../utils/constants";
 const LoginForm = () => {
   const { setIsAuthenticated } = useContext(AuthContext);
   const [email, setEmail] = useState(""); 
@@ -20,7 +20,7 @@ const LoginForm = () => {
     }
 
     try {
-      const res = await fetch("http://213.156.132.144:3033/connexion", {
+      const res = await fetch(`${URL_BACKEND}/auth/connexion`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router-dom";
 import ChairIcon from "@mui/icons-material/Chair";
+import { URL_BACKEND } from "../utils/constants";
 
 
 const genres = [
@@ -37,13 +38,13 @@ function MoviesPage() {
   useEffect(function () {
     async function fetchData() {
       try {
-        const filmsRes = await fetch("http://localhost:3033/films");
+        const filmsRes = await fetch( `${URL_BACKEND}/films`);
         if (!filmsRes.ok) {
           throw new Error("Erreur HTTP films: " + filmsRes.status);
         }
         const filmsData = await filmsRes.json();
 
-        const seancesRes = await fetch("http://localhost:3033/seances/");
+        const seancesRes = await fetch( `${URL_BACKEND}/seances`);
         if (!seancesRes.ok) {
           throw new Error("Erreur HTTP séances: " + seancesRes.status);
         }
@@ -120,7 +121,7 @@ function MoviesPage() {
     }
   }
   async function getMoyenneAvis(filmId) {
-    const res = await fetch(`http://localhost:3033/avis/getReviews/${filmId}`);
+    const res = await fetch(`${URL_BACKEND}/avis/getReviews/${filmId}`);
     const avis = await res.json();
     if (avis.length === 0) {
       return;
@@ -244,10 +245,13 @@ function MoviesPage() {
                             "/reservation?movie=" +
                             selectedMovie.id_film +
                             "&session=" +
-                            session.id_seance,
+                            session.id_seance +
+                            "&cinema=" +
+                            session.nom_cinema,
                             {
                               state: { movie: selectedMovie, session: session },
                             }
+
                           );
                         }}
                       >

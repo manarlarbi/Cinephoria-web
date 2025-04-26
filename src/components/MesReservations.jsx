@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { URL_BACKEND } from "../utils/constants";
 
 const MesReservations = () => {
   const [reservations, setReservations] = useState([]);
@@ -22,7 +23,7 @@ const MesReservations = () => {
     const fetchReservations = async () => {
       try {
         const res = await fetch(
-          `http://213.156.132.144:3033/mes-reservations/${idUtilisateur}`,
+          ` ${ URL_BACKEND} /reservations/mes-reservations/${idUtilisateur}`,
           {
             method: "GET",
             headers: {
@@ -45,7 +46,7 @@ const MesReservations = () => {
   const annulerReservation = async (id_reservation) => {
     try {
       const res = await fetch(
-        `http://213.156.132.144:3033/reservations/${id_reservation}`,
+        ` ${URL_BACKEND}/reservations/${id_reservation}`,
         {
           method: "DELETE",
           headers: {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper } from "@mui/material";
 import Cookies from "js-cookie";
+import { URL_BACKEND } from "../../utils/constants";
 
 export default function FilmsPage() {
   const [films, setFilms] = useState([]);
@@ -14,7 +15,7 @@ export default function FilmsPage() {
   const token = Cookies.get("token");
 
   useEffect(() => {
-    fetch("http://213.156.132.144:3033/films")
+    fetch(`${URL_BACKEND}/films`)
       .then((res) => res.json())
       .then((data) => setFilms(data))
       .catch((err) => console.log("Erreur fetch films:", err));
@@ -22,7 +23,7 @@ export default function FilmsPage() {
 
   const handleAddFilm = (e) => {
     e.preventDefault();
-    fetch("http://213.156.132.144:3033/films/creer", {
+    fetch(`${URL_BACKEND}/films/creer`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export default function FilmsPage() {
   };
 
   const handleDeleteFilm = (id) => {
-    fetch(`http://213.156.132.144:3033/films/${id}`, {
+    fetch(`${URL_BACKEND}/films/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

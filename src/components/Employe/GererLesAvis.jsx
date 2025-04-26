@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import Switch from '@mui/material/Switch';
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { URL_BACKEND } from "../../utils/constants";
 
 
 
@@ -41,7 +42,7 @@ export default function GererLesAvis() {
   const [isValider,setIsValider]=useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3033/avis/getReviews")
+    fetch(`${URL_BACKEND}/avis/getReviews`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Erreur lors de la récupération des avis");
@@ -55,7 +56,7 @@ export default function GererLesAvis() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3033/films")
+    fetch(`${URL_BACKEND}/films`)
       .then((res) => res.json())
       .then((data) => {
         const filmMap = {};
@@ -68,7 +69,7 @@ export default function GererLesAvis() {
   }, []);
 
   const handelDeleteAvis = (avisId) => {
-    fetch(`http://localhost:3033/avis/deleteReview/${avisId}`, {
+    fetch(`${URL_BACKEND}/avis/deleteReview/${avisId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -100,7 +101,7 @@ export default function GererLesAvis() {
       });
   };
   const handelUpDatedAvis =(avisId,isValider)=>{
-    fetch(`http://localhost:3033/avis/updateReview/${avisId}`,{
+    fetch(`${URL_BACKEND}/avis/updateReview/${avisId}`,{
       method:"PUT",
       headers:{
         Authorization: `Bearer ${token}`,
