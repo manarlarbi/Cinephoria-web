@@ -38,6 +38,9 @@ const LoginForm = () => {
       
 
       Cookies.set("token", data.token, { secure: true });
+      if (data.role === "Employ%C3%A9") {
+        data.role = "Employé";
+      }
       Cookies.set("userRole", data.role);
       Cookies.set("email", data.email);
       Cookies.set("id_utilisateur", data.id_utilisateur);
