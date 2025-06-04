@@ -1,70 +1,159 @@
-# Getting Started with Create React App
+# Cinephoria Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Cinéphoria Web est une application React permettant aux utilisateurs de :
 
-## Available Scripts
+- Parcourir les films disponibles
+- Réserver des places de cinéma
+- Accéder à leurs réservations
+- Gérer les films, séances et utilisateurs via une interface administrateur
+- Consulter et gérer les avis en tant qu’employé
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Fonctionnalités principales
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Authentification JWT
+-  Système de réservation en ligne
+-  Gestion des séances et films
+-  Interfaces dédiées : Utilisateur, Employé, Administrateur
+-  Application React avec Material UI et React Router
+-  Tests unitaires avec Jest
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+##  Technologies utilisées
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **React.js**
+- **Material UI**
+- **React Router DOM**
+- **JWT, js-cookie**
+- **SweetAlert2**
+- **Swiper.js**
+- **Jest** (tests)
+- **Docker** (conteneurisation possible)
+- **GitHub Actions** (déploiement CI/CD)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Structure du projet
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```plaintext
+├── Cinephoria-web-main/
+│   ├── .gitignore
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── babel.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── .github/
+│   │   ├── workflows/
+│   │   │   ├── node.js.yml
+│   ├── public/
+│   │   ├── favicon.ico
+│   │   ├── index.html
+│   │   ├── logo192.png
+│   │   ├── logo512.png
+│   │   ├── manifest.json
+│   │   ├── robots.txt
+│   ├── src/
+│   │   ├── App.css
+│   │   ├── App.js
+│   │   ├── index.css
+│   │   ├── index.js
+│   │   ├── logo.svg
+│   │   ├── reportWebVitals.js
+│   │   ├── setupTests.js
+│   │   ├── components/
+│   │   │   ├── AdminDashboard.jsx
+│   │   │   ├── ContactForm.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   ├── LoginForm.jsx
+│   │   │   ├── MesReservations.jsx
+│   │   │   ├── MoviesDetailles.jsx
+│   │   │   ├── MoviesPage.jsx
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── ReservationPage.jsx
+│   │   │   ├── SignUpForm.jsx
+│   │   │   ├── Admin/
+│   │   │   │   ├── EmployePage.jsx
+│   │   │   │   ├── FilmsPage.jsx
+│   │   │   │   ├── SallesPage.jsx
+│   │   │   │   ├── SeancePage.jsx
+│   │   │   ├── Employe/
+│   │   │   │   ├── GererLesAvis.jsx
+│   │   │   ├── __tests__/
+│   │   │   │   ├── token.test.js
+│   │   │   │   ├── util.test.js
+│   │   ├── utils/
+│   │   │   ├── constants.js
+│   │   │   ├── token.js
+│   │   │   ├── validation.js
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Installation locale
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Cloner le dépôt
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+git clone https://github.com/manarlarbi/cinephoria-web.git
+cd cinephoria-web
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Installer les dépendances
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm install
+```
 
-## Learn More
+### Lancer le projet
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm start
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+> L’application sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Lancer les tests
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Ce projet inclut des tests unitaires situés dans `src/components/__tests__/`.
 
-### Making a Progressive Web App
+Pour les exécuter :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash
+npm test
+```
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Déploiement Docker (optionnel)
 
-### Deployment
+Un fichier `Dockerfile` est présent. Pour construire et lancer un conteneur :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+docker build -t cinephoria-web .
+docker run -p 3000:3000 cinephoria-web
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+##  Variables d'environnement
+
+Créez un fichier `.env` à la racine et ajoutez-y :
+
+```env
+REACT_APP_API_URL=http://localhost:3033
+```
+
+---
+
+##  Auteur
+
+Projet développé dans le cadre du **Titre Professionnel CDA** — par _[ Manar LARBI]_.
+
+---
