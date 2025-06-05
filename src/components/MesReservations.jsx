@@ -23,7 +23,7 @@ const MesReservations = () => {
     const fetchReservations = async () => {
       try {
         const res = await fetch(
-          ` ${ URL_BACKEND} /reservations/mes-reservations/${idUtilisateur}`,
+          ` ${URL_BACKEND}/reservations/mes-reservations/${idUtilisateur}`,
           {
             method: "GET",
             headers: {
